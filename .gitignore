@@ -1,7 +1,7 @@
 # Jupyter
 .ipynb_checkpoints/
 **/.ipynb_checkpoints/
-notebooks/01_introduction_en.ipynb
+notebooks/*.ipynb
 
 # Python
 __pycache__/
