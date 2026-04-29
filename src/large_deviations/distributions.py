@@ -38,22 +38,28 @@ def bernoulli_ld(p: float) -> DistributionLD:
     for x in [0, 1], and +∞ otherwise.
     """
     validate_probability(p)
+    
+    log_p = np.log(p)
+    log_q = np.log1p(-p)
 
     def cgf(theta: float) -> float:
-        return float(np.log((1.0 - p) + p * np.exp(theta)))
+        """Cumulant generating function Γ(θ), computed stably."""
+        return float(np.logaddexp(log_q, log_p + theta))
 
     def domain_contains(theta: float) -> bool:
+        """Check if a value is in the domain of the cumulant generating function."""
         return np.isfinite(theta)
-
+    
     def tilted_parameter(theta: float) -> float:
-        numerator = p * np.exp(theta)
-        denominator = (1.0 - p) + numerator
-        return float(numerator / denominator)
+        """Tilted Bernoulli parameter p_θ, computed stably."""
+        return float(np.exp(log_p + theta - cgf(theta)))
 
     def mean_under_tilt(theta: float) -> float:
+        """Mean of the tilted distribution."""
         return tilted_parameter(theta)
 
     def rate_function(x: float) -> float:
+        """Rate function Γ*(x), computed stably."""
         if x < 0.0 or x > 1.0:
             return np.inf
 
