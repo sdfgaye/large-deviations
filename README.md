@@ -6,15 +6,15 @@ A research-style quantitative finance project on rare events, exponential tiltin
 
 This repository studies the core ideas of **large deviations theory** with a final focus on **credit portfolio risk**.
 
-The project is based on Huyên Pham’s *Large Deviations in Mathematical Finance* and follows a simple workflow:
+The project is based on Huyen Pham's *Large Deviations in Mathematical Finance* and follows a simple workflow:
 
-**Derive → Code → Apply**
+**Derive -> Code -> Apply**
 
 The objective is to move from foundational tools such as:
 - cumulant generating functions,
 - exponential change of measure,
-- Fenchel–Legendre transforms,
-- Cramér’s theorem,
+- Fenchel-Legendre transforms,
+- Cramer's theorem,
 - importance sampling,
 
 to a final implementation of **extreme portfolio loss asymptotics** in a **one-factor Gaussian copula model**.
@@ -53,57 +53,70 @@ This result highlights a key phenomenon in credit risk:
 
 ## Roadmap
 
-### Module 0 — Foundations
-- cumulant generating function \( \Gamma(\theta) \)
+### Module 0 - Foundations
+- cumulant generating function $\Gamma(\theta)$
 - exponential change of measure
 - convexity and saddle-point intuition
-- Fenchel–Legendre transform
+- Fenchel-Legendre transform
 - Bernoulli / Poisson / Gaussian / Exponential examples
 
-### Module 1 — Cramér’s theorem
+### Module 1 - Cramer's theorem
 - exponential decay of rare-event probabilities
 - upper bound and lower bound
 - empirical verification of the log-asymptotic regime
 
-### Module 2 — Importance Sampling
+### Module 2 - Importance Sampling
 - rare-event estimation
 - exponential tilting
 - asymptotically optimal importance sampling
 
-### Module 3 — Gärtner–Ellis
+### Module 3 - Gartner-Ellis
 - extension beyond i.i.d. settings
 - limiting cumulant generating functions
 - bridge toward dependent models
 
-### Module 4 — Credit Portfolio Risk
+### Module 4 - Credit Portfolio Risk
 - one-factor Gaussian copula
 - homogeneous default portfolio
 - extreme loss asymptotics
 - two-step importance sampling
 
+## Theory notes
+
+### Foundations
+
+- [Exponential tilting and importance sampling](docs/foundations/exponential_tilting.md)
+
+### Distributions
+
+- [Bernoulli distribution](docs/distributions/bernoulli.md)
+
 ## Repository structure
 
 ```text
 large-deviations/
-├── README.md
-├── pyproject.toml
-├── requirements.txt
-├── notebooks/
-├── src/
-│   └── large_deviations/
-├── tests/
-├── docs/
-└── assets/
+|-- README.md
+|-- pyproject.toml
+|-- requirements.txt
+|-- notebooks/
+|-- src/
+|   `-- large_deviations/
+|-- tests/
+|-- docs/
+`-- assets/
 ```
 
 ## Current status
 
 - [x] Project initialized
 - [x] Packaging scaffold in place
-- [ ] README polishing
-- [ ] Introductory notebook
-- [ ] Foundations module
-- [ ] Cramér experiments
+- [x] Foundations module
+- [x] Bernoulli implementation
+- [x] Bernoulli tests
+- [x] Exponential tilting theory note
+- [x] Bernoulli theory note
+- [ ] Poisson implementation
+- [ ] Cramer experiments
 - [ ] Importance sampling module
 - [ ] Credit portfolio final module
 

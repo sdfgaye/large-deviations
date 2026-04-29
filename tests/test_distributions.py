@@ -69,3 +69,29 @@ def test_bernoulli_rejects_invalid_probability():
 
     with pytest.raises(ValueError, match="0 < p < 1"):
         bernoulli_ld(p=1.0)
+
+
+def test_bernoulli_rate_function_matches_legendre_at_tilted_mean():
+    dist = bernoulli_ld(p=0.2)
+
+    theta = 0.7
+    x = dist.mean_under_tilt(theta)
+
+    expected = theta * x - dist.cgf(theta)
+
+    assert np.isclose(dist.rate_function(x), expected)
+
+
+def test_bernoulli_cgf_derivative_matches_mean_under_tilt():
+    dist = bernoulli_ld(p=0.2)
+
+    theta = 0.7
+    eps = 1e-6
+
+    numerical_derivative = (dist.cgf(theta + eps) - dist.cgf(theta - eps)) / (2 * eps)
+
+    assert np.isclose(
+        numerical_derivative,
+        dist.mean_under_tilt(theta),
+        rtol=1e-5,
+    )
