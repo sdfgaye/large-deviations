@@ -1,4 +1,4 @@
-# large-deviations
+﻿# large-deviations
 
 A research-style quantitative finance project on rare events, exponential tilting, and large loss asymptotics.
 
@@ -39,13 +39,13 @@ the goal is not only to reproduce formulas, but to build a clean bridge between 
 
 The long-term goal of the repository is to reproduce and implement the large-loss credit risk result for a homogeneous portfolio in a one-factor Gaussian copula setting:
 
-$$
+```math
 \lim_{n \to \infty} \frac{1}{\ln n}\ln \mathbb{P}(L_n \ge n q_n)
 =
 -a \frac{1-\rho^2}{\rho^2},
 \qquad
 q_n \uparrow 1,\quad 1-q_n = O(n^{-a}),\ 0<a\le 1.
-$$
+```
 
 This result highlights a key phenomenon in credit risk:
 
