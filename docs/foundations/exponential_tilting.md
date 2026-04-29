@@ -6,46 +6,46 @@ Let $X$ be a real-valued random variable with probability distribution $\mu$.
 
 We are interested in estimating a rare-event probability of the form:
 
-$$
+```math
 p = \mathbb{P}(X > \ell).
-$$
+```
 
 Define the rare event:
 
-$$
+```math
 A = \{X > \ell\}.
-$$
+```
 
 Then:
 
-$$
+```math
 p = \mathbb{P}(A).
-$$
+```
 
 Using the distribution $\mu$, this probability can be written as:
 
-$$
+```math
 p = \int 1_A(x)\,\mu(dx).
-$$
+```
 
 This means that we integrate the indicator of the rare event under the original probability law.
 
 In Monte Carlo simulation, the naive estimator is:
 
-$$
+```math
 \widehat p_N
 =
 \frac{1}{N}
 \sum_{i=1}^N 1_A(X_i),
-$$
+```
 
 where $X_1,\dots,X_N$ are independent samples from $\mu$.
 
 This estimator is unbiased, but when $A$ is rare, most simulated values satisfy:
 
-$$
+```math
 1_A(X_i)=0.
-$$
+```
 
 Therefore, the estimator can have high relative error.
 
@@ -59,67 +59,67 @@ Let $\nu$ be another probability distribution.
 
 Assume that $\nu$ is absolutely continuous with respect to $\mu$, and write its density as:
 
-$$
+```math
 f(x)
 =
 \frac{d\nu}{d\mu}(x).
-$$
+```
 
 Then:
 
-$$
+```math
 \nu(dx)=f(x)\mu(dx).
-$$
+```
 
 Whenever $f(x)>0$, we can rewrite:
 
-$$
+```math
 \mu(dx)=\frac{1}{f(x)}\nu(dx).
-$$
+```
 
 Starting from:
 
-$$
+```math
 p = \int 1_A(x)\mu(dx),
-$$
+```
 
 we substitute $\mu(dx)$ by $\frac{1}{f(x)}\nu(dx)$:
 
-$$
+```math
 p
 =
 \int 1_A(x)\frac{1}{f(x)}\nu(dx).
-$$
+```
 
 Therefore:
 
-$$
+```math
 p
 =
 \mathbb{E}_{\nu}
 \left[
 1_A(X)\frac{1}{f(X)}
 \right].
-$$
+```
 
 Since:
 
-$$
+```math
 \frac{1}{f(X)}
 =
 \frac{d\mu}{d\nu}(X),
-$$
+```
 
 we obtain the importance sampling identity:
 
-$$
+```math
 p
 =
 \mathbb{E}_{\nu}
 \left[
 1_A(X)\frac{d\mu}{d\nu}(X)
 \right].
-$$
+```
 
 The new law $\nu$ is used to simulate more efficiently, and the likelihood ratio $\frac{d\mu}{d\nu}$ corrects the bias introduced by the change of measure.
 
@@ -129,31 +129,31 @@ The new law $\nu$ is used to simulate more efficiently, and the likelihood ratio
 
 Suppose the rare event is of the form:
 
-$$
+```math
 X > \ell.
-$$
+```
 
 Then large values of $X$ contribute most to the probability.
 
 A natural way to make large values more likely is to give more weight to large $x$. For $\theta > 0$, the function
 
-$$
+```math
 e^{\theta x}
-$$
+```
 
 is increasing in $x$.
 
 So we define a new probability measure proportional to:
 
-$$
+```math
 e^{\theta x}\mu(dx).
-$$
+```
 
 Formally:
 
-$$
+```math
 \nu(dx) \propto e^{\theta x}\mu(dx).
-$$
+```
 
 This is not yet a probability measure, because its total mass is not necessarily equal to $1$. We need to normalize it.
 
@@ -163,18 +163,18 @@ This is not yet a probability measure, because its total mass is not necessarily
 
 The normalizing constant is:
 
-$$
+```math
 \int e^{\theta x}\mu(dx)
 =
 \mathbb{E}_{\mu}
 \left[
 e^{\theta X}
 \right].
-$$
+```
 
 The cumulant generating function is defined by:
 
-$$
+```math
 \Gamma(\theta)
 =
 \log
@@ -182,22 +182,22 @@ $$
 \left[
 e^{\theta X}
 \right].
-$$
+```
 
 Therefore:
 
-$$
+```math
 \mathbb{E}_{\mu}
 \left[
 e^{\theta X}
 \right]
 =
 e^{\Gamma(\theta)}.
-$$
+```
 
 The set of admissible values of $\theta$ is the effective domain:
 
-$$
+```math
 D(\Gamma)
 =
 \left\{
@@ -205,7 +205,7 @@ D(\Gamma)
 \;:\;
 \Gamma(\theta)<\infty
 \right\}.
-$$
+```
 
 
 ---
@@ -214,47 +214,47 @@ $$
 
 For $\theta \in D(\Gamma)$, the exponentially tilted law is defined by:
 
-$$
+```math
 \mu_{\theta}(dx)
 =
 e^{\theta x-\Gamma(\theta)}\mu(dx).
-$$
+```
 
 This is a probability measure because:
 
-$$
+```math
 \int \mu_{\theta}(dx)
 =
 \int e^{\theta x-\Gamma(\theta)}\mu(dx).
-$$
+```
 
 Since $e^{-\Gamma(\theta)}$ does not depend on $x$:
 
-$$
+```math
 \int \mu_{\theta}(dx)
 =
 e^{-\Gamma(\theta)}
 \int e^{\theta x}\mu(dx).
-$$
+```
 
 By definition of $\Gamma$:
 
-$$
+```math
 \int e^{\theta x}\mu(dx)
 =
 e^{\Gamma(\theta)}.
-$$
+```
 
 Hence:
 
-$$
+```math
 \int \mu_{\theta}(dx)
 =
 e^{-\Gamma(\theta)}
 e^{\Gamma(\theta)}
 =
 1.
-$$
+```
 
 So $\mu_\theta$ is a valid probability distribution.
 
@@ -264,23 +264,23 @@ So $\mu_\theta$ is a valid probability distribution.
 
 The density of the tilted law with respect to the original law is:
 
-$$
+```math
 \frac{d\mu_\theta}{d\mu}(x)
 =
 e^{\theta x-\Gamma(\theta)}.
-$$
+```
 
 Therefore, the inverse likelihood ratio is:
 
-$$
+```math
 \frac{d\mu}{d\mu_\theta}(x)
 =
 e^{-\theta x+\Gamma(\theta)}.
-$$
+```
 
 So for any event $A$, we can write:
 
-$$
+```math
 \mathbb{P}_{\mu}(A)
 =
 \mathbb{E}_{\mu_\theta}
@@ -288,7 +288,7 @@ $$
 1_A(X)
 e^{-\theta X+\Gamma(\theta)}
 \right].
-$$
+```
 
 This is the core identity behind exponential-tilting importance sampling.
 
@@ -304,59 +304,59 @@ Let $X_1,\dots,X_n$ be independent and identically distributed random variables 
 
 Define:
 
-$$
+```math
 S_n
 =
 X_1+\cdots+X_n.
-$$
+```
 
 Under the tilted probability measure, each $X_i$ has tilted law $\mu_\theta$.
 
 The likelihood ratio is:
 
-$$
+```math
 \frac{dP_\theta}{dP}(X_1,\dots,X_n)
 =
 \prod_{i=1}^n
 e^{\theta X_i-\Gamma(\theta)}.
-$$
+```
 
 Therefore:
 
-$$
+```math
 \frac{dP_\theta}{dP}(X_1,\dots,X_n)
 =
 e^{\theta(X_1+\cdots+X_n)-n\Gamma(\theta)}.
-$$
+```
 
 Since $S_n=X_1+\cdots+X_n$, this becomes:
 
-$$
+```math
 \frac{dP_\theta}{dP}(X_1,\dots,X_n)
 =
 e^{\theta S_n-n\Gamma(\theta)}.
-$$
+```
 
 The inverse likelihood ratio is:
 
-$$
+```math
 \frac{dP}{dP_\theta}(X_1,\dots,X_n)
 =
 e^{-\theta S_n+n\Gamma(\theta)}.
-$$
+```
 
 Hence, for a rare event of the form:
 
-$$
+```math
 \left\{
 \frac{S_n}{n} \ge x
 \right\},
-$$
+```
 
 
 we obtain:
 
-$$
+```math
 \mathbb{P}
 \left(
 \frac{S_n}{n} \ge x
@@ -367,7 +367,7 @@ $$
 1_{\{S_n/n \ge x\}}
 e^{-\theta S_n+n\Gamma(\theta)}
 \right].
-$$
+```
 
 This is the importance sampling estimator associated with exponential tilting.
 
@@ -379,11 +379,11 @@ The cumulant generating function contains information about the tilted distribut
 
 For $\theta$ in the interior of $D(\Gamma)$:
 
-$$
+```math
 \Gamma'(\theta)
 =
 \mathbb{E}_{\theta}[X].
-$$
+```
 
 This means that the derivative of the CGF gives the mean of $X$ under the tilted law $\mu_\theta$.
 
@@ -393,15 +393,15 @@ This is why exponential tilting is useful for rare events.
 
 If the rare event is:
 
-$$
+```math
 \frac{S_n}{n} \ge x,
-$$
+```
 
 one typically chooses $\theta$ such that:
 
-$$
+```math
 \Gamma'(\theta)=x.
-$$
+```
 
 Then, under $P_\theta$, the empirical mean $S_n/n$ is centered around $x$.
 
@@ -415,33 +415,33 @@ Cramer's theorem studies the asymptotic probability of rare deviations of empiri
 
 The rate function is the Fenchel-Legendre transform of the cumulant generating function:
 
-$$
+```math
 \Gamma^*(x)
 =
 \sup_{\theta \in \mathbb{R}}
 \left\{
 \theta x-\Gamma(\theta)
 \right\}.
-$$
+```
 
 For large $n$, Cramer's theorem gives the logarithmic approximation:
 
-$$
+```math
 \mathbb{P}
 \left(
 \frac{S_n}{n} \ge x
 \right)
 \approx
 e^{-n\Gamma^*(x)}.
-$$
+```
 
 The optimal exponential tilt is linked to the optimizer in:
 
-$$
+```math
 \Gamma^*(x)
 =
 \theta x-\Gamma(\theta).
-$$
+```
 
 When the supremum is attained at $\theta=\theta_x$, the same $\theta_x$ is used to define the tilted law that makes the rare event less rare.
 
@@ -458,10 +458,10 @@ Exponential tilting transforms the original law by giving more weight to outcome
 
 For $\theta>0$, large values of $X$ are amplified:
 
-$$
+```math
 e^{\theta x}
 \quad \text{increases with } x.
-$$
+```
 
 For $\theta<0$, small values of $X$ are amplified.
 
@@ -471,19 +471,19 @@ The likelihood ratio ensures that the estimator remains unbiased.
 
 A useful summary is:
 
-$$
+```math
 \mu_\theta(dx)
 =
 e^{\theta x-\Gamma(\theta)}\mu(dx),
-$$
+```
 
 and:
 
-$$
+```math
 \frac{d\mu}{d\mu_\theta}(x)
 =
 e^{-\theta x+\Gamma(\theta)}.
-$$
+```
 
 So exponential tilting can be summarized as:
 
