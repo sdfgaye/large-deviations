@@ -13,10 +13,17 @@ dependencies = [
     "scipy",
     "matplotlib",
     "pandas",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+notebooks = [
     "jupyterlab",
     "notebook",
     "ipywidgets",
-    "pytest",
 ]
 
 [tool.setuptools]

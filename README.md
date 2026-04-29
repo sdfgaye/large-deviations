@@ -81,6 +81,17 @@ This result highlights a key phenomenon in credit risk:
 - extreme loss asymptotics
 - two-step importance sampling
 
+
+## Theory notes
+
+### Foundations
+
+- [Exponential tilting and importance sampling](docs/foundations/exponential_tilting.md)
+
+### Distributions
+
+- [Bernoulli distribution](docs/distributions/bernoulli.md)
+
 ## Repository structure
 
 ```text
@@ -100,9 +111,12 @@ large-deviations/
 
 - [x] Project initialized
 - [x] Packaging scaffold in place
-- [ ] README polishing
-- [ ] Introductory notebook
-- [ ] Foundations module
+- [x] Foundations module
+- [x] Bernoulli implementation
+- [x] Bernoulli tests
+- [x] Exponential tilting theory note
+- [x] Bernoulli theory note
+- [ ] Poisson implementation
 - [ ] Cramér experiments
 - [ ] Importance sampling module
 - [ ] Credit portfolio final module
