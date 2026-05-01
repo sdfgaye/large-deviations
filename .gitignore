@@ -33,3 +33,8 @@ desktop.ini
 *.png
 
 *.egg-info/
+
+.codex/
+.github/skills/
+.github/prompts/
+openspec/
