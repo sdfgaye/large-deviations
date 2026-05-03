@@ -505,6 +505,31 @@ In the codebase, each distribution-specific object should expose the following l
 
 The Bernoulli implementation is the first concrete example of this structure.
 
+
+---
+
+## Next step
+
+The present note introduced the exponential change of measure, the tilted law
+$\mu_\theta$, and the likelihood ratio used in importance sampling.
+
+The next note explains how this change of measure is used to prove Cramer's theorem and
+why the rate function
+
+$$
+\Gamma^*(x)
+=
+\sup_{\theta\in\mathbb R}
+\{\theta x-\Gamma(\theta)\}
+$$
+
+governs the logarithmic decay of rare-event probabilities.
+
+Continue with:
+
+```text
+docs/foundations/cramers_theorem_from_scratch.md
+```
 ---
 
 ## Reference
