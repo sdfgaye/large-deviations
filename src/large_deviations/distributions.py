@@ -2,7 +2,17 @@
 Elementary distributions for large-deviation theory.
 
 This module provides closed-form large-deviation objects for classical
-probability distributions: Bernoulli, Poisson, Gaussian, and Exponential.
+probability distributions.
+
+Currently implemented
+---------------------
+- Bernoulli distribution.
+
+Planned next
+------------
+- Poisson distribution.
+- Gaussian distribution.
+- Exponential distribution.
 
 References
 ----------
