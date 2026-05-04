@@ -1,5 +1,30 @@
 ﻿# Bernoulli Distribution
 
+This note applies the general derivation from
+
+```text
+docs/foundations/cramers_theorem_from_scratch.md
+```
+
+to the Bernoulli distribution.
+
+The Bernoulli case is the first concrete example in the project because it is simple,
+fully explicit, and directly connected to default indicators in credit-risk models.
+
+It shows how the abstract objects
+
+$$
+\Gamma(\theta),
+\qquad
+\mu_\theta,
+\qquad
+\Gamma^*(x),
+\qquad
+\theta_x
+$$
+
+become computable formulas.
+
 ## 1. Setup
 
 Let
