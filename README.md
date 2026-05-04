@@ -136,6 +136,7 @@ jupyter lab notebooks/01_bernoulli_exponential_tilting.ipynb
 ### Foundations
 
 - [Exponential tilting and importance sampling](docs/foundations/exponential_tilting.md)
+- [Cramer's theorem from scratch](docs/foundations/cramers_theorem_from_scratch.md)
 
 ### Distributions
 
@@ -171,7 +172,7 @@ large-deviations/
 - [x] Exponential tilting theory note
 - [x] Bernoulli theory note
 - [x] Notebook 01: Bernoulli exponential tilting
-- [ ] Cramer theorem module
+- [x] Cramer theorem module
 - [ ] Importance sampling module
 - [ ] Additional distribution examples
 - [ ] Credit portfolio final module
