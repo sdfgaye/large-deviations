@@ -12,13 +12,25 @@ Derive -> Code -> Apply
 
 The goal is to build a clean bridge between large-deviation theory, numerical experiments, and quantitative finance applications.
 
-## Featured notebook
+## Featured notebooks
 
-The first notebook studies Bernoulli random variables as the elementary model for default indicators. It connects the cumulant generating function, exponential tilting, Cramer's rate function, exact binomial tail probabilities, and importance sampling diagnostics.
+This project is built as a sequence of research notebooks. Each notebook starts from a mathematical object, implements it in Python, and connects it to rare-event or credit-risk intuition.
+
+### Notebook 01 — Bernoulli exponential tilting
+
+The first notebook studies Bernoulli random variables as the elementary model for default indicators. It introduces the cumulant generating function, exponential change of measure, tilted Bernoulli probabilities, and the saddle-point intuition behind rare-event simulation.
 
 [Open notebook 01 — Bernoulli exponential tilting](notebooks/01_bernoulli_exponential_tilting.ipynb)
 
 ![Notebook 01 preview](assets/notebook_01_bernoulli_preview.svg)
+
+### Notebook 02 — Cramer's theorem for Bernoulli tail risk
+
+The second notebook verifies Cramer's theorem in the Bernoulli/binomial setting. It compares exact binomial tail probabilities with the large-deviation approximation on a logarithmic scale, and interprets the event as a large realized default rate in an independent credit portfolio.
+
+[Open notebook 02 — Cramer Bernoulli tail risk](notebooks/02_cramer_bernoulli_tail_risk.ipynb)
+
+![Notebook 02 preview](assets/notebook_02_cramer_preview.svg)
 
 ## Overview
 
