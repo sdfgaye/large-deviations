@@ -184,6 +184,7 @@ large-deviations/
 - [x] Exponential tilting theory note
 - [x] Bernoulli theory note
 - [x] Notebook 01: Bernoulli exponential tilting
+- [x] Notebook 02: Cramer Bernoulli tail risk
 - [x] Cramer theorem module
 - [ ] Importance sampling module
 - [ ] Additional distribution examples
