@@ -702,7 +702,7 @@ The Bernoulli large-deviation object exposes the main mathematical quantities.
 | Cumulant generating function | $\Gamma(\theta)=\log(1-p+p e^\theta)$ | `cgf(theta)` |
 | Effective domain | $D(\Gamma)=\mathbb{R}$ | `domain_contains(theta)` |
 | Tilted parameter | $p_\theta=\frac{p e^\theta}{1-p+p e^\theta}$ | `tilted_parameter(theta)` |
-| Mean under tilt | $\mathbb{E}_\theta[X]=p_\theta$ | `mean_under_tilt(theta)` |
+| Mean under tilt | $ \mathbb{E}_{\theta}[X] = p_{\theta} $ | `mean_under_tilt(theta)` |
 | Rate function | $\Gamma^*(x)=x\log(x/p)+(1-x)\log((1-x)/(1-p))$ | `rate_function(x)` |
 
 This is the first concrete distribution implemented in the project.
