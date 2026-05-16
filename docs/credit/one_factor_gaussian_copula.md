@@ -104,7 +104,7 @@ This gives a simple simulation algorithm.
 > **For each Monte Carlo path:**
 >
 > 1. Sample $Z \sim \mathcal N(0,1)$.
-> 2. Compute $$ p_Z = \Phi\left(\frac{\rho Z+\Phi^{-1}(p)}{\sqrt{1-\rho^2}}\right).$$
+> 2. Compute $ p_Z = \Phi\left(\frac{\rho Z+\Phi^{-1}(p)}{\sqrt{1-\rho^2}}\right).$
 > 3. Sample $L_n \sim \mathrm{Binomial}(n,p_Z)$.
 > 4. Store $L_n/n$.
 
