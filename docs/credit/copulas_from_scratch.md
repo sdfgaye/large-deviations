@@ -82,9 +82,7 @@ A copula is the joint distribution of those uniforms.
 Informally:
 
 $$
-C(u_1,\ldots,u_n)
-=
-\mathbb P(U_1\le u_1,\ldots,U_n\le u_n).
+C(u_1,\ldots,u_n) = \mathbb P(U_1\le u_1,\ldots,U_n\le u_n).
 $$
 
 The copula contains the dependence structure.
@@ -96,9 +94,7 @@ The marginals are added afterward.
 A Gaussian copula starts with a multivariate normal vector:
 
 $$
-(G_1,\ldots,G_n)
-\sim
-N(0,R),
+(G_1,\ldots,G_n)\simN(0,R),
 $$
 
 where $R$ is a correlation matrix.
@@ -156,9 +152,7 @@ This is the threshold representation used in the Gaussian copula credit model.
 The one-factor model writes the Gaussian latent variable as
 
 $$
-X_k
-=
-\rho Z+\sqrt{1-\rho^2}\varepsilon_k,
+X_k = \rho Z+\sqrt{1-\rho^2}\varepsilon_k,
 $$
 
 where:
@@ -213,32 +207,19 @@ $$
 So
 
 $$
-\varepsilon_k
->
-\frac{x_p-\rho z}{\sqrt{1-\rho^2}}.
+\varepsilon_k > \frac{x_p-\rho z}{\sqrt{1-\rho^2}}.
 $$
 
 Therefore
 
 $$
-p(z)
-=
-\mathbb P(Y_k=1\mid Z=z)
-=
-1-\Phi\left(
-\frac{x_p-\rho z}{\sqrt{1-\rho^2}}
-\right).
+p(z) = \mathbb P(Y_k=1\mid Z=z) = 1-\Phi\left(\frac{x_p-\rho z}{\sqrt{1-\rho^2}}\right).
 $$
 
 Using $x_p=\Phi^{-1}(1-p)=-\Phi^{-1}(p)$, this becomes
 
 $$
-p(z)
-=
-\Phi\left(
-\frac{\rho z+\Phi^{-1}(p)}
-{\sqrt{1-\rho^2}}
-\right).
+p(z) = \Phi\left(\frac{\rho z+\Phi^{-1}(p)}{\sqrt{1-\rho^2}}\right).
 $$
 
 This is the key formula.
@@ -325,8 +306,7 @@ For extreme thresholds $q_n\uparrow 1$, Pham's large-loss result in the homogene
 $$
 \lim_{n\to\infty}
 \frac{1}{\log n}
-\log \mathbb P(L_n\ge nq_n)
-=
+\log \mathbb P(L_n\ge nq_n)=
 -a\frac{1-\rho^2}{\rho^2},
 $$
 
