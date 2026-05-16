@@ -517,8 +517,7 @@ The next note explains how this change of measure is used to prove Cramer's theo
 why the rate function
 
 $$
-\Gamma^*(x)
-=
+\Gamma^*(x) =
 \sup_{\theta\in\mathbb R}
 \{\theta x-\Gamma(\theta)\}
 $$
