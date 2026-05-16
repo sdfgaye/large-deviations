@@ -19,8 +19,7 @@ $$
 The latent variable is
 
 $$
-X_k
-=
+X_k =
 \rho Z+\sqrt{1-\rho^2}\varepsilon_k,
 $$
 
@@ -39,8 +38,7 @@ Each $X_k$ is standard normal.
 So
 
 $$
-\mathbb P(Y_k=1)
-=
+\mathbb P(Y_k=1) =
 \mathbb P(X_k>x_p).
 $$
 
@@ -67,10 +65,8 @@ $$
 So
 
 $$
-p(z)
-=
-\mathbb P(Y_k=1\mid Z=z)
-=
+p(z) =
+\mathbb P(Y_k=1\mid Z=z) =
 \Phi\left(
 \frac{\rho z+\Phi^{-1}(p)}
 {\sqrt{1-\rho^2}}
@@ -110,13 +106,7 @@ This gives a simple simulation algorithm.
 > 1. Sample $Z \sim \mathcal N(0,1)$.
 > 2. Compute
 >
->    $$
->    p_Z =
->    \Phi\left(
->    \frac{\rho Z+\Phi^{-1}(p)}
->    {\sqrt{1-\rho^2}}
->    \right).
->    $$
+>    $$ p_Z = \Phi\left(\frac{\rho Z+\Phi^{-1}(p)}{\sqrt{1-\rho^2}}\right).$$
 >
 > 3. Sample $L_n \sim \mathrm{Binomial}(n,p_Z)$.
 > 4. Store $L_n/n$.
@@ -193,8 +183,7 @@ In the homogeneous one-factor Gaussian copula model,
 $$
 \lim_{n\to\infty}
 \frac{1}{\log n}
-\log \mathbb P(L_n\ge n q_n)
-=
+\log \mathbb P(L_n\ge n q_n) =
 -a\frac{1-\rho^2}{\rho^2}.
 $$
 
@@ -213,8 +202,7 @@ The decay is polynomial in $n$, not exponential in $n$.
 The exponent is
 
 $$
-\gamma
-=
+\gamma =
 a\frac{1-\rho^2}{\rho^2}.
 $$
 
@@ -238,8 +226,7 @@ The two steps are:
 This mirrors the model structure:
 
 $$
-\mathbb P(L_n\ge nq_n)
-=
+\mathbb P(L_n\ge nq_n) =
 \mathbb E\left[
 \mathbb P(L_n\ge nq_n\mid Z)
 \right].
