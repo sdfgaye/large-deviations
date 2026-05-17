@@ -6,3 +6,4 @@ jupyterlab
 notebook
 ipywidgets
 pytest
+plotly
