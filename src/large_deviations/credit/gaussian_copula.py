@@ -5,33 +5,30 @@ from __future__ import annotations
 import numpy as np
 from scipy.stats import norm
 
+from large_deviations.foundations import (
+    validate_positive_integer,
+    validate_probability,
+)
+
 Array = np.ndarray
 
 
-def _validate_positive_integer(name: str, value: int) -> None:
-    if not isinstance(value, int):
-        raise TypeError(f"{name} must be an integer.")
-    if value <= 0:
-        raise ValueError(f"{name} must be positive.")
-
-
-def _validate_probability(name: str, value: float) -> None:
-    if not np.isfinite(value):
-        raise ValueError(f"{name} must be finite.")
-    if not 0.0 < value < 1.0:
-        raise ValueError(f"{name} must satisfy 0 < {name} < 1.")
-
-
-def _validate_rho(rho: float) -> None:
+def validate_rho(rho: float) -> None:
+    """Validate a one-factor Gaussian copula factor loading."""
     if not np.isfinite(rho):
         raise ValueError("rho must be finite.")
     if not 0.0 <= rho < 1.0:
         raise ValueError("rho must satisfy 0 <= rho < 1.")
 
 
+def _validate_threshold_exponent(a: float) -> None:
+    if not np.isfinite(a) or not 0.0 < a <= 1.0:
+        raise ValueError("a must satisfy 0 < a <= 1.")
+
+
 def asset_threshold(p: float) -> float:
     """Return x_p such that P[N(0,1) > x_p] = p."""
-    _validate_probability("p", p)
+    validate_probability(p)
     return float(norm.ppf(1.0 - p))
 
 
@@ -55,8 +52,8 @@ def conditional_default_probability(
 
         p(z) = Phi((rho z + Phi^{-1}(p)) / sqrt(1 - rho^2)).
     """
-    _validate_probability("p", p)
-    _validate_rho(rho)
+    validate_probability(p)
+    validate_rho(rho)
 
     z_array = np.asarray(z)
     denominator = np.sqrt(1.0 - rho**2)
@@ -88,10 +85,10 @@ def sample_gaussian_copula_losses(
     conditional_probabilities:
         Conditional default probabilities p(Z).
     """
-    _validate_positive_integer("n", n)
-    _validate_positive_integer("sample_size", sample_size)
-    _validate_probability("p", p)
-    _validate_rho(rho)
+    validate_positive_integer("n", n)
+    validate_positive_integer("sample_size", sample_size)
+    validate_probability(p)
+    validate_rho(rho)
 
     if rng is None:
         rng = np.random.default_rng()
@@ -122,10 +119,8 @@ def large_loss_threshold_qn(
 
     This is the large-loss threshold regime used later for the final theorem.
     """
-    _validate_positive_integer("n", n)
-
-    if not np.isfinite(a) or not 0.0 < a <= 1.0:
-        raise ValueError("a must satisfy 0 < a <= 1.")
+    validate_positive_integer("n", n)
+    _validate_threshold_exponent(a)
 
     if not np.isfinite(scale) or scale <= 0.0:
         raise ValueError("scale must be positive.")
@@ -148,10 +143,8 @@ def gaussian_copula_large_loss_decay_rate(
     This is the polynomial decay exponent in the dependent Gaussian copula
     large-loss regime.
     """
-    if not np.isfinite(a) or not 0.0 < a <= 1.0:
-        raise ValueError("a must satisfy 0 < a <= 1.")
-
-    _validate_rho(rho)
+    _validate_threshold_exponent(a)
+    validate_rho(rho)
 
     if rho == 0.0:
         raise ValueError("rho must be strictly positive for the dependent asymptotic.")
