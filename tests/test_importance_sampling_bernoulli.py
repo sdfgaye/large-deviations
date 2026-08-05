@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import pytest
 from scipy.stats import binom
@@ -80,7 +82,7 @@ def test_bernoulli_tail_tilted_mc_uses_saddlepoint_tilt():
     assert np.isclose(dist.tilted_parameter(theta), q, atol=1e-8)
 
 
-def test_bernoulli_tail_tilted_mc_is_reasonable_for_rare_event():
+def test_bernoulli_tail_tilted_mc_is_accurate_for_rare_event():
     rng = np.random.default_rng(123)
 
     n = 100
@@ -101,5 +103,35 @@ def test_bernoulli_tail_tilted_mc_is_reasonable_for_rare_event():
 
     assert estimate.estimate > 0.0
     assert estimate.standard_error > 0.0
-    assert estimate.relative_error < 0.20
+    # With the saddle-point tilt and 50k paths, the observed relative error is
+    # below 1%; 5% leaves ample slack without letting regressions through.
+    assert estimate.relative_error < 0.05
     assert abs(estimate.estimate - exact) < 4.0 * estimate.standard_error
+
+
+def test_bernoulli_tail_tilted_mc_reduces_variance_versus_naive():
+    # The whole point of the tilted estimator: at equal budget, its standard
+    # error must be far below the naive Monte Carlo standard error. The naive
+    # standard error is known exactly because the naive samples are Bernoulli
+    # indicators with success probability equal to the exact tail probability.
+    rng = np.random.default_rng(123)
+
+    n = 100
+    p = 0.02
+    q = 0.10
+    sample_size = 50_000
+
+    threshold = binomial_tail_threshold(n=n, q=q)
+    exact = float(binom.sf(threshold - 1, n, p))
+    naive_standard_error = math.sqrt(exact * (1.0 - exact) / sample_size)
+
+    tilted = bernoulli_tail_tilted_mc(
+        n=n,
+        p=p,
+        q=q,
+        sample_size=sample_size,
+        rng=rng,
+    )
+
+    # Observed reduction factor is ~80x with this seed; require at least 20x.
+    assert tilted.standard_error < naive_standard_error / 20.0
