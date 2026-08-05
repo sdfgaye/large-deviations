@@ -1,3 +1,5 @@
+"""Large-deviation tools for rare-event estimation in finance."""
+
 from large_deviations.distributions import bernoulli_ld
 from large_deviations.foundations import DistributionLD
 
@@ -16,5 +18,4 @@ __all__ = [
     "bernoulli_tail_naive_mc",
     "bernoulli_tail_tilted_mc",
 ]
-
 

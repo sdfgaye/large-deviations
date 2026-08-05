@@ -1,3 +1,5 @@
+import math
+
 import numpy as np
 import pytest
 
@@ -80,6 +82,32 @@ def test_bernoulli_rate_function_matches_legendre_at_tilted_mean():
     expected = theta * x - dist.cgf(theta)
 
     assert np.isclose(dist.rate_function(x), expected)
+
+
+@pytest.mark.parametrize(
+    ("p", "x"),
+    [(0.2, 0.7), (0.02, 0.10), (0.5, 0.9)],
+)
+def test_bernoulli_rate_function_matches_kl_closed_form(p, x):
+    # The Bernoulli rate function is the relative entropy
+    # I_p(x) = x log(x / p) + (1 - x) log((1 - x) / (1 - p)).
+    dist = bernoulli_ld(p=p)
+
+    expected = x * math.log(x / p) + (1.0 - x) * math.log((1.0 - x) / (1.0 - p))
+
+    assert np.isclose(dist.rate_function(x), expected, atol=1e-12)
+
+
+def test_bernoulli_rate_function_symmetry_under_relabeling():
+    # Swapping success and failure labels leaves the divergence invariant:
+    # I_p(x) = I_{1-p}(1-x).
+    p = 0.2
+    x = 0.7
+
+    assert np.isclose(
+        bernoulli_ld(p=p).rate_function(x),
+        bernoulli_ld(p=1.0 - p).rate_function(1.0 - x),
+    )
 
 
 def test_bernoulli_cgf_derivative_matches_mean_under_tilt():
