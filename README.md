@@ -1,38 +1,60 @@
-# large-deviations
+﻿# large-deviations
 
 [![Tests](https://github.com/sdfgaye/large-deviations/actions/workflows/tests.yml/badge.svg)](https://github.com/sdfgaye/large-deviations/actions/workflows/tests.yml)
 
-A research-style quantitative finance project on rare events, exponential tilting, and large-loss asymptotics, following H. Pham, *Large Deviations in Mathematical Finance* (2010).
+A research-style quantitative finance project on rare events, exponential tilting, and large-loss asymptotics.
 
-Each part of the project starts from a mathematical object, implements it in a small tested Python package, and connects it to rare-event or credit-risk intuition through a notebook.
+This repository follows a simple workflow:
 
-## Notebooks
+```text
+Derive -> Code -> Apply
+```
 
-### 01 — Bernoulli exponential tilting
+The goal is to build a clean bridge between large-deviation theory, numerical experiments, and quantitative finance applications.
 
-Bernoulli random variables as the elementary model for default indicators: cumulant generating function, exponential change of measure, tilted Bernoulli probabilities, and the saddle-point intuition behind rare-event simulation.
+## Featured notebooks
 
-[Open notebook 01](notebooks/01_bernoulli_exponential_tilting.ipynb)
+This project is built as a sequence of research notebooks. Each notebook starts from a mathematical object, implements it in Python, and connects it to rare-event or credit-risk intuition.
+
+### Notebook 01 — Bernoulli exponential tilting
+
+The first notebook studies Bernoulli random variables as the elementary model for default indicators. It introduces the cumulant generating function, exponential change of measure, tilted Bernoulli probabilities, and the saddle-point intuition behind rare-event simulation.
+
+[Open notebook 01 — Bernoulli exponential tilting](notebooks/01_bernoulli_exponential_tilting.ipynb)
 
 ![Notebook 01 preview](assets/notebook_01_bernoulli_preview.svg)
 
-### 02 — Cramer's theorem for Bernoulli tail risk
+### Notebook 02 — Cramer's theorem for Bernoulli tail risk
 
-Numerical verification of Cramer's theorem in the Bernoulli/binomial setting: exact binomial tail probabilities against the large-deviation approximation on a logarithmic scale, interpreted as a large realized default rate in an independent credit portfolio.
+The second notebook verifies Cramer's theorem in the Bernoulli/binomial setting. It compares exact binomial tail probabilities with the large-deviation approximation on a logarithmic scale, and interprets the event as a large realized default rate in an independent credit portfolio.
 
-[Open notebook 02](notebooks/02_cramer_bernoulli_tail_risk.ipynb)
+[Open notebook 02 — Cramer Bernoulli tail risk](notebooks/02_cramer_bernoulli_tail_risk.ipynb)
 
 ![Notebook 02 preview](assets/notebook_02_cramer_preview.svg)
 
-### 03 — Bernoulli importance sampling
+## Overview
 
-From theory to computation: naive Monte Carlo versus exponentially tilted importance sampling for rare binomial tail events, with likelihood-ratio diagnostics and variance comparisons against the exact benchmark.
+Large deviations describe the exponential decay of rare-event probabilities. These questions appear naturally in quantitative finance when studying:
 
-[Open notebook 03](notebooks/03_bernoulli_importance_sampling.ipynb)
+- tail risk,
+- stress scenarios,
+- rare default events,
+- variance reduction,
+- and risk management of large credit portfolios.
+
+The project starts from foundational tools:
+
+- cumulant generating functions,
+- exponential change of measure,
+- Fenchel-Legendre transforms,
+- Cramer's theorem,
+- importance sampling,
+
+and moves toward a final implementation of extreme portfolio loss asymptotics in a one-factor Gaussian copula model.
 
 ## Final target
 
-The end goal is the large-loss asymptotic for a homogeneous portfolio in a one-factor Gaussian copula model:
+The long-term goal is to reproduce and implement the large-loss credit risk result for a homogeneous portfolio in a one-factor Gaussian copula setting:
 
 ```math
 \lim_{n \to \infty} \frac{1}{\ln n}\ln \mathbb{P}(L_n \ge n q_n)
@@ -42,13 +64,13 @@ The end goal is the large-loss asymptotic for a homogeneous portfolio in a one-f
 q_n \uparrow 1,\quad 1-q_n = O(n^{-a}),\quad 0<a\le 1.
 ```
 
-When dependence becomes more systemic, extreme losses become much less rare — the tail probability decays polynomially in $n$ instead of exponentially.
+This result highlights a key phenomenon in credit risk:
 
-## Status
-
-The foundations (CGF, Fenchel-Legendre transform, tilting helpers), the Bernoulli distribution, Cramer's theorem experiments, and the importance sampling module are implemented, tested, and covered by notebooks 01–03. The credit module (`src/large_deviations/credit/`) already contains the one-factor Gaussian copula tools, the quadrature benchmark, and the large-loss decay-rate computations; the accompanying notebook 04 is in progress. Still to come: a Gartner-Ellis bridge beyond the i.i.d. case and two-step importance sampling for the dependent portfolio.
+> when dependence becomes more systemic, extreme losses become much less rare.
 
 ## How to run
+
+Clone the repository and create a virtual environment:
 
 ```bash
 git clone https://github.com/sdfgaye/large-deviations.git
@@ -66,11 +88,16 @@ source .venv/bin/activate
 .venv\Scripts\Activate.ps1
 ```
 
-Install with development and notebook dependencies, then run the tests:
+Install the project with development and notebook dependencies:
 
 ```bash
 python -m pip install --upgrade pip
 pip install -e ".[dev,notebooks]"
+```
+
+Run the tests:
+
+```bash
 pytest
 ```
 
@@ -80,21 +107,113 @@ Launch the first notebook:
 jupyter lab notebooks/01_bernoulli_exponential_tilting.ipynb
 ```
 
+## Roadmap
+
+### Module 0 — Foundations
+
+- cumulant generating function $\Gamma(\theta)$
+- exponential change of measure
+- convexity and saddle-point intuition
+- Fenchel-Legendre transform
+- Bernoulli distribution implementation
+
+### Module 1 — Cramer's theorem
+
+- exact binomial rare-event probabilities
+- logarithmic asymptotics
+- empirical verification of the rate function
+
+### Module 2 — Importance sampling
+
+- rare-event Monte Carlo estimation
+- exponential tilting
+- second-moment diagnostics
+- asymptotically optimal importance sampling
+
+### Module 3 — Gartner-Ellis
+
+- limiting cumulant generating functions
+- extension beyond i.i.d. models
+- bridge toward dependent credit models
+
+### Module 4 — Credit portfolio risk
+
+- homogeneous default portfolio
+- one-factor Gaussian copula
+- extreme loss asymptotics
+- two-step importance sampling
+
 ## Theory notes
 
-Foundations:
+### Foundations
 
 - [Exponential tilting and importance sampling](docs/foundations/exponential_tilting.md)
 - [Cramer's theorem from scratch](docs/foundations/cramers_theorem_from_scratch.md)
 
-Distributions:
+### Distributions
 
 - [Bernoulli distribution](docs/distributions/bernoulli.md)
 
-Credit risk:
+## Repository structure
 
-- [Copulas from scratch](docs/credit/copulas_from_scratch.md)
-- [One-factor Gaussian copula](docs/credit/one_factor_gaussian_copula.md)
+```text
+large-deviations/
+|-- README.md
+|-- pyproject.toml
+|-- requirements.txt
+|-- notebooks/
+|-- src/
+|   `-- large_deviations/
+|-- tests/
+|-- docs/
+|-- assets/
+`-- .github/workflows/
+```
+
+## Current status
+
+- [x] Project initialized
+- [x] Packaging scaffold in place
+- [x] GitHub Actions test workflow
+- [x] Foundations module
+- [x] Distribution abstraction with `DistributionLD`
+- [x] Bernoulli implementation
+- [x] Bernoulli tests
+- [x] Exponential tilting helpers in `tilting.py`
+- [x] Plotting helpers in `plotting.py`
+- [x] Exponential tilting theory note
+- [x] Bernoulli theory note
+- [x] Notebook 01: Bernoulli exponential tilting
+- [x] Notebook 02: Cramer Bernoulli tail risk
+- [x] Cramer theorem module
+- [ ] Importance sampling module
+- [ ] Additional distribution examples
+- [ ] Credit portfolio final module
+
+## Tech stack
+
+- Python 3.10+
+- NumPy
+- SciPy
+- Pandas
+- Matplotlib
+- JupyterLab
+- ipywidgets
+- pytest
+
+## Project philosophy
+
+This is not meant to be a loose collection of notebooks.
+
+The goal is to build a repository that is:
+
+- mathematically rigorous,
+- readable,
+- reproducible,
+- modular,
+- and useful as a long-term research / portfolio project.
+
+Each piece of code should trace back to a clear mathematical object, and each notebook should explain why the implementation matters.
 
 ## Reference
 
@@ -102,4 +221,4 @@ H. Pham, *Large Deviations in Mathematical Finance* (2010).
 
 ## Author
 
-Souleymane Gaye
+**Souleymane Gaye**

@@ -22,13 +22,10 @@ from scipy.integrate import quad
 from scipy.stats import binom, norm
 
 from large_deviations.credit.gaussian_copula import (
+    _validate_positive_integer,
+    _validate_probability,
+    _validate_rho,
     conditional_default_probability,
-    validate_rho,
-)
-from large_deviations.foundations import (
-    noise_tolerant_ceil,
-    validate_positive_integer,
-    validate_probability,
 )
 
 
@@ -65,10 +62,10 @@ def loss_count_threshold(n: int, q: float) -> int:
 
         L_n >= ceil(n q).
     """
-    validate_positive_integer("n", n)
-    validate_probability(q, name="q")
+    _validate_positive_integer("n", n)
+    _validate_probability("q", q)
 
-    return noise_tolerant_ceil(n * q)
+    return int(np.ceil(n * q))
 
 
 def factor_threshold_for_conditional_default_probability(
@@ -90,9 +87,9 @@ def factor_threshold_for_conditional_default_probability(
     This threshold is useful for splitting the quadrature integral around the
     transition region where the conditional default probability reaches q.
     """
-    validate_probability(q, name="q")
-    validate_probability(p)
-    validate_rho(rho)
+    _validate_probability("q", q)
+    _validate_probability("p", p)
+    _validate_rho(rho)
 
     if rho == 0.0:
         raise ValueError(
@@ -220,10 +217,10 @@ def credit_tail_probability_quadrature(
     CreditTailQuadratureResult
         Probability, log-probability, integration error and diagnostic metadata.
     """
-    validate_positive_integer("n", n)
-    validate_probability(p)
-    validate_rho(rho)
-    validate_probability(q, name="q")
+    _validate_positive_integer("n", n)
+    _validate_probability("p", p)
+    _validate_rho(rho)
+    _validate_probability("q", q)
 
     threshold = loss_count_threshold(n, q)
 

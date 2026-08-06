@@ -34,7 +34,6 @@ desktop.ini
 
 *.egg-info/
 
-.claude/
 .codex/
 .github/skills/
 .github/prompts/

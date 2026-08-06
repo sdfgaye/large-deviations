@@ -22,12 +22,10 @@ only need to provide a sampler for S_n under the tilted law.
 
 from __future__ import annotations
 
-from collections.abc import Callable
 from dataclasses import asdict, dataclass
+from typing import Callable
 
 import numpy as np
-
-from large_deviations.foundations import validate_finite, validate_positive_integer
 
 
 Array = np.ndarray
@@ -57,6 +55,20 @@ def _validate_sample_size(sample_size: int) -> None:
         raise ValueError("sample_size must be at least 2.")
 
 
+def _validate_positive_integer(name: str, value: int) -> None:
+    """Validate that a value is a positive integer."""
+    if not isinstance(value, int):
+        raise TypeError(f"{name} must be an integer.")
+    if value <= 0:
+        raise ValueError(f"{name} must be positive.")
+
+
+def _validate_finite_scalar(name: str, value: float) -> None:
+    """Validate that a scalar is finite."""
+    if not np.isfinite(value):
+        raise ValueError(f"{name} must be finite.")
+
+
 def _as_1d_float_array(values: Array, name: str) -> Array:
     """Convert values to a one-dimensional float array."""
     array = np.asarray(values, dtype=float)
@@ -65,34 +77,6 @@ def _as_1d_float_array(values: Array, name: str) -> Array:
         raise ValueError(f"{name} must be a one-dimensional array.")
 
     return array
-
-
-def _sampled_event_indicators(
-    *,
-    sample_sums: SampleSumsFunction,
-    event: EventFunction,
-    sample_size: int,
-    rng: np.random.Generator | None,
-    sampler_name: str,
-) -> tuple[Array, Array]:
-    """Sample sums, validate their shape, and evaluate the event indicators."""
-    if rng is None:
-        rng = np.random.default_rng()
-
-    sums = _as_1d_float_array(
-        sample_sums(sample_size, rng),
-        name="sampled sums",
-    )
-
-    if sums.size != sample_size:
-        raise ValueError(f"{sampler_name} must return exactly sample_size values.")
-
-    indicators = np.asarray(event(sums), dtype=float)
-
-    if indicators.shape != sums.shape:
-        raise ValueError("event must return an array with the same shape as sums.")
-
-    return sums, indicators
 
 
 def summarize_monte_carlo_samples(samples: Array) -> MonteCarloEstimate:
@@ -164,9 +148,9 @@ def log_likelihood_ratio_sum(
     np.ndarray
         Log likelihood ratios.
     """
-    validate_finite("theta", theta)
-    validate_finite("gamma_theta", gamma_theta)
-    validate_positive_integer("n", n)
+    _validate_finite_scalar("theta", theta)
+    _validate_finite_scalar("gamma_theta", gamma_theta)
+    _validate_positive_integer("n", n)
 
     sums = _as_1d_float_array(sums, name="sums")
 
@@ -204,13 +188,21 @@ def naive_sum_estimate(
     """
     _validate_sample_size(sample_size)
 
-    _, indicators = _sampled_event_indicators(
-        sample_sums=sample_sums,
-        event=event,
-        sample_size=sample_size,
-        rng=rng,
-        sampler_name="sample_sums",
+    if rng is None:
+        rng = np.random.default_rng()
+
+    sums = _as_1d_float_array(
+        sample_sums(sample_size, rng),
+        name="sampled sums",
     )
+
+    if sums.size != sample_size:
+        raise ValueError("sample_sums must return exactly sample_size values.")
+
+    indicators = np.asarray(event(sums), dtype=float)
+
+    if indicators.shape != sums.shape:
+        raise ValueError("event must return an array with the same shape as sums.")
 
     return summarize_monte_carlo_samples(indicators)
 
@@ -259,18 +251,28 @@ def exponential_tilting_sum_estimate(
     MonteCarloEstimate
         Importance sampling estimate.
     """
-    validate_positive_integer("n", n)
-    validate_finite("theta", theta)
-    validate_finite("gamma_theta", gamma_theta)
+    _validate_positive_integer("n", n)
+    _validate_finite_scalar("theta", theta)
+    _validate_finite_scalar("gamma_theta", gamma_theta)
     _validate_sample_size(sample_size)
 
-    sums, indicators = _sampled_event_indicators(
-        sample_sums=sample_sums_under_tilt,
-        event=event,
-        sample_size=sample_size,
-        rng=rng,
-        sampler_name="sample_sums_under_tilt",
+    if rng is None:
+        rng = np.random.default_rng()
+
+    sums = _as_1d_float_array(
+        sample_sums_under_tilt(sample_size, rng),
+        name="sampled tilted sums",
     )
+
+    if sums.size != sample_size:
+        raise ValueError(
+            "sample_sums_under_tilt must return exactly sample_size values."
+        )
+
+    indicators = np.asarray(event(sums), dtype=float)
+
+    if indicators.shape != sums.shape:
+        raise ValueError("event must return an array with the same shape as sums.")
 
     log_weights = log_likelihood_ratio_sum(
         theta=theta,

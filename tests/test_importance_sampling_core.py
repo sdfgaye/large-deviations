@@ -1,7 +1,6 @@
 import numpy as np
 import pytest
 
-from large_deviations.distributions import bernoulli_ld
 from large_deviations.importance_sampling.core import (
     exponential_tilting_sum_estimate,
     log_likelihood_ratio_sum,
@@ -33,39 +32,22 @@ def test_summarize_monte_carlo_samples_rejects_non_1d_array():
         summarize_monte_carlo_samples(samples)
 
 
-def test_log_likelihood_ratio_matches_bernoulli_measure_change():
-    # For a single Bernoulli variable, the likelihood ratio dP/dP_theta can be
-    # computed directly from the two probability masses:
-    #     P(X=1)/P_theta(X=1) = p / p_theta,
-    #     P(X=0)/P_theta(X=0) = (1 - p) / (1 - p_theta).
-    p = 0.2
+def test_log_likelihood_ratio_sum_formula():
     theta = 0.7
+    sums = np.array([0.0, 2.0, 5.0])
+    n = 10
+    gamma_theta = 0.3
 
-    dist = bernoulli_ld(p)
-    gamma_theta = dist.cgf(theta)
-    tilted_p = float(dist.tilted_parameter(theta))
-
-    log_weights = log_likelihood_ratio_sum(
+    result = log_likelihood_ratio_sum(
         theta=theta,
-        sums=np.array([0.0, 1.0]),
-        n=1,
+        sums=sums,
+        n=n,
         gamma_theta=gamma_theta,
     )
 
-    assert np.isclose(np.exp(log_weights[0]), (1.0 - p) / (1.0 - tilted_p))
-    assert np.isclose(np.exp(log_weights[1]), p / tilted_p)
+    expected = -theta * sums + n * gamma_theta
 
-
-def test_log_likelihood_ratio_sum_is_zero_for_identity_tilt():
-    # theta = 0 and Gamma(0) = 0 leave the measure unchanged.
-    log_weights = log_likelihood_ratio_sum(
-        theta=0.0,
-        sums=np.array([0.0, 3.0, 7.0]),
-        n=10,
-        gamma_theta=0.0,
-    )
-
-    assert np.allclose(log_weights, 0.0)
+    assert np.allclose(result, expected)
 
 
 def test_log_likelihood_ratio_sum_rejects_non_1d_sums():

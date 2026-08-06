@@ -8,7 +8,9 @@ $$
 p = 2\%.
 $$
 
-This tells us the risk of one obligor, but it does **not** tell us how defaults happen together.
+This tells us the risk of one obligor.
+
+It does **not** tell us how defaults happen together.
 
 Two portfolios can have the same marginal default probabilities and very different joint behavior:
 
@@ -70,8 +72,10 @@ has a uniform distribution on $[0,1]$.
 
 This means that we can separate two jobs:
 
-1. build dependence between uniform variables $U_1,...,U_n$,
-2. transform each $U_k$ into the marginal variable we want.
+
+> 1. build dependence between uniform variables $U_1,...,U_n$
+> 2. transform each $U_k$ into the marginal variable we want
+
 
 A copula is the joint distribution of those uniforms.
 
@@ -81,14 +85,16 @@ $$
 C(u_1,\ldots,u_n) = \mathbb P(U_1\le u_1,\ldots,U_n\le u_n).
 $$
 
-The copula contains the dependence structure; the marginals are added afterward.
+The copula contains the dependence structure.
+
+The marginals are added afterward.
 
 ## 4. Gaussian copula recipe
 
 A Gaussian copula starts with a multivariate normal vector:
 
 $$
-(G_1,\ldots,G_n)\sim N(0,R),
+(G_1,\ldots,G_n)\simN(0,R),
 $$
 
 where $R$ is a correlation matrix.
@@ -168,7 +174,11 @@ $$
 \mathrm{Corr}(X_i,X_j)=\rho^2.
 $$
 
-A wording caveat: $\rho$ is the factor loading, while $\rho^2$ is the pairwise latent asset correlation in this homogeneous setup.
+Important wording:
+
+> 1. $\rho$ is the factor loading 
+> 2. $\rho^2$ is the pairwise latent asset correlation in this homogeneous setup.
+
 
 Default is
 
@@ -230,10 +240,12 @@ This is the main computational advantage of the one-factor model.
 
 We can simulate losses in two steps:
 
-1. sample $Z$,
-2. sample $L_n \mid Z$ from $\mathrm{Binomial}(n, p(Z))$.
 
-There is no need to simulate all $n$ individual defaults when the portfolio is homogeneous.
+> 1. sample $Z$
+> 2. sample $L_n | Z$ from $Binomial(n, p(Z))$
+
+
+No need to simulate all $n$ individual defaults when the portfolio is homogeneous.
 
 ## 9. What changes versus independent defaults?
 
@@ -283,7 +295,9 @@ $$
 \frac{L_n}{n}\Rightarrow p(Z).
 $$
 
-This is the core difference: a bad systematic factor can make the conditional default probability high for many obligors at once.
+This is the core difference.
+
+A bad systematic factor can make the conditional default probability high for many obligors at once.
 
 ## 10. Why large losses become polynomial
 
@@ -318,7 +332,9 @@ This is very different from the independent Bernoulli case, where large deviatio
 
 ### Pitfall 1 — confusing default probability and dependence
 
-The marginal default probability $p$ says how likely one name is to default, while the copula controls how defaults cluster.
+The marginal default probability $p$ says how likely one name is to default.
+
+The copula controls how defaults cluster.
 
 ### Pitfall 2 — confusing $\rho$ and pairwise correlation
 
@@ -332,12 +348,32 @@ the pairwise latent correlation is $\rho^2$, not $\rho$.
 
 ### Pitfall 3 — thinking the Gaussian copula is perfect
 
-The Gaussian copula is mathematically convenient, but it is not a universal model of crisis dependence. In this project, it is used because it gives a clean bridge from Bernoulli rare events to dependent portfolio losses, large-loss asymptotics, and two-step importance sampling.
+The Gaussian copula is mathematically convenient, but it is not a universal model of crisis dependence.
+
+In this project, it is used because it gives a clean bridge from:
+
+```text
+Bernoulli rare events
+to dependent portfolio losses
+to large-loss asymptotics
+to two-step importance sampling
+```
 
 ## 12. Project map
 
-1. Notebook 01 — Bernoulli exponential tilting
-2. Notebook 02 — Cramer's theorem for independent defaults
-3. Notebook 03 — importance sampling for independent rare default tails
-4. Notebook 04 — one-factor Gaussian copula dependent defaults
-5. Notebook 05 — extreme-loss asymptotics and two-step importance sampling
+```text
+Notebook 01:
+    Bernoulli exponential tilting
+
+Notebook 02:
+    Cramer's theorem for independent defaults
+
+Notebook 03:
+    Importance sampling for independent rare default tails
+
+Notebook 04:
+    One-factor Gaussian copula dependent defaults
+
+Notebook 05:
+    Extreme-loss asymptotics and two-step importance sampling
+```
