@@ -17,36 +17,24 @@ Therefore, under the tilted law, S_n is Binomial(n, p_theta).
 """
 
 from __future__ import annotations
-from collections.abc import Callable
 
 import numpy as np
 
 from large_deviations.distributions import bernoulli_ld
-from large_deviations.foundations import validate_probability
+from large_deviations.foundations import (
+    noise_tolerant_ceil,
+    validate_positive_integer,
+    validate_probability,
+)
 from large_deviations.importance_sampling.core import (
     Array,
     EventFunction,
     MonteCarloEstimate,
+    SampleSumsFunction,
     exponential_tilting_sum_estimate,
     naive_sum_estimate,
 )
 from large_deviations.tilting import theta_for_tilted_mean
-
-
-def _validate_positive_integer(name: str, value: int) -> None:
-    """Validate that a value is a positive integer."""
-    if not isinstance(value, int):
-        raise TypeError(f"{name} must be an integer.")
-    if value <= 0:
-        raise ValueError(f"{name} must be positive.")
-
-
-def _validate_tail_level(q: float) -> None:
-    """Validate a Bernoulli empirical tail level."""
-    if not np.isfinite(q):
-        raise ValueError("q must be finite.")
-    if not 0.0 < q < 1.0:
-        raise ValueError("q must satisfy 0 < q < 1.")
 
 
 def binomial_tail_threshold(n: int, q: float) -> int:
@@ -72,10 +60,10 @@ def binomial_tail_threshold(n: int, q: float) -> int:
     int
         Threshold k.
     """
-    _validate_positive_integer("n", n)
-    _validate_tail_level(q)
+    validate_positive_integer("n", n)
+    validate_probability(q, name="q")
 
-    return int(np.ceil(n * q - 1e-12))
+    return noise_tolerant_ceil(n * q)
 
 
 def binomial_tail_event(n: int, q: float) -> EventFunction:
@@ -105,7 +93,7 @@ def sample_binomial_sums(
     *,
     n: int,
     p: float,
-)   -> Callable[[int, np.random.Generator], Array]:
+) -> SampleSumsFunction:
     """Return a sampler for Binomial(n, p) sums.
 
     The returned function has the signature expected by the generic Monte Carlo
@@ -113,7 +101,7 @@ def sample_binomial_sums(
 
         sample_sums(sample_size, rng)
     """
-    _validate_positive_integer("n", n)
+    validate_positive_integer("n", n)
     validate_probability(p)
 
     def sample_sums(sample_size: int, rng: np.random.Generator) -> Array:
@@ -196,9 +184,9 @@ def bernoulli_tail_tilted_mc(
     MonteCarloEstimate
         Exponential-tilting importance sampling estimate.
     """
-    _validate_positive_integer("n", n)
+    validate_positive_integer("n", n)
     validate_probability(p)
-    _validate_tail_level(q)
+    validate_probability(q, name="q")
 
     dist = bernoulli_ld(p)
 

@@ -4,16 +4,6 @@ Elementary distributions for large-deviation theory.
 This module provides closed-form large-deviation objects for classical
 probability distributions.
 
-Currently implemented
----------------------
-- Bernoulli distribution.
-
-Planned next
-------------
-- Poisson distribution.
-- Gaussian distribution.
-- Exponential distribution.
-
 References
 ----------
 Pham, H. (2010), Large Deviations in Mathematical Finance, Sections 2.1--2.2.
@@ -48,7 +38,7 @@ def bernoulli_ld(p: float) -> DistributionLD:
     for x in [0, 1], and +∞ otherwise.
     """
     validate_probability(p)
-    
+
     log_p = np.log(p)
     log_q = np.log1p(-p)
 
@@ -59,7 +49,7 @@ def bernoulli_ld(p: float) -> DistributionLD:
     def domain_contains(theta: float) -> bool:
         """Check if a value is in the domain of the cumulant generating function."""
         return np.isfinite(theta)
-    
+
     def tilted_parameter(theta: float) -> float:
         """Tilted Bernoulli parameter p_θ, computed stably."""
         return float(np.exp(log_p + theta - cgf(theta)))

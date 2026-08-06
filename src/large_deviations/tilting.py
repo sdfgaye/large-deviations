@@ -10,10 +10,11 @@ from dataclasses import asdict, dataclass
 
 import numpy as np
 
-from large_deviations.foundations import DistributionLD
-
-
-TiltedParameter = float | tuple[float, ...]
+from large_deviations.foundations import (
+    DistributionLD,
+    TiltedParameter,
+    validate_finite,
+)
 
 
 @dataclass(frozen=True, slots=True)
@@ -30,12 +31,6 @@ class TiltingSummary:
     def to_dict(self) -> dict[str, object]:
         """Return a dictionary representation, useful for pandas."""
         return asdict(self)
-
-
-def validate_finite(name: str, value: float) -> None:
-    """Validate that a scalar value is finite."""
-    if not np.isfinite(value):
-        raise ValueError(f"{name} must be finite.")
 
 
 def unit_weight_multiplier(theta: float) -> float:
@@ -103,6 +98,72 @@ def evaluate_tilting_curve(
     }
 
 
+def _tilted_mean_offset_grid(
+    dist: DistributionLD,
+    theta_grid: np.ndarray,
+    target_mean: float,
+) -> np.ndarray:
+    """Evaluate mean_under_tilt - target_mean on a grid, NaN where undefined."""
+    offsets = np.full_like(theta_grid, fill_value=np.nan, dtype=float)
+
+    for index, theta in enumerate(theta_grid):
+        theta_float = float(theta)
+
+        if not dist.domain_contains(theta_float):
+            continue
+
+        try:
+            mean = dist.mean_under_tilt(theta_float)
+        except Exception:
+            continue
+
+        if np.isfinite(mean):
+            offsets[index] = mean - target_mean
+
+    return offsets
+
+
+def _find_sign_change_bracket(
+    thetas: np.ndarray,
+    offsets: np.ndarray,
+) -> tuple[float, float] | None:
+    """Return consecutive grid points where the offset changes sign, if any."""
+    for i in range(len(thetas) - 1):
+        if offsets[i] * offsets[i + 1] < 0.0:
+            return float(thetas[i]), float(thetas[i + 1])
+
+    return None
+
+
+def _bisect_root(
+    function,
+    bracket: tuple[float, float],
+    tolerance: float,
+    max_iterations: int,
+) -> float:
+    """Find a root of function by bisection inside a sign-changing bracket."""
+    left, right = bracket
+    left_value = function(left)
+
+    for _ in range(max_iterations):
+        mid = 0.5 * (left + right)
+        mid_value = function(mid)
+
+        if abs(mid_value) <= tolerance:
+            return float(mid)
+
+        if left_value * mid_value <= 0.0:
+            right = mid
+        else:
+            left = mid
+            left_value = mid_value
+
+        if abs(right - left) <= tolerance:
+            break
+
+    return float(0.5 * (left + right))
+
+
 def theta_for_tilted_mean(
     dist: DistributionLD,
     target_mean: float,
@@ -148,24 +209,9 @@ def theta_for_tilted_mean(
         raise ValueError("theta_range must satisfy lower < upper.")
 
     theta_grid = np.linspace(lower, upper, grid_size)
+    offsets = _tilted_mean_offset_grid(dist, theta_grid, target_mean)
 
-    centered_means = np.full_like(theta_grid, fill_value=np.nan, dtype=float)
-
-    for index, theta in enumerate(theta_grid):
-        theta_float = float(theta)
-
-        if not dist.domain_contains(theta_float):
-            continue
-
-        try:
-            mean = dist.mean_under_tilt(theta_float)
-        except Exception:
-            continue
-
-        if np.isfinite(mean):
-            centered_means[index] = mean - target_mean
-
-    valid = np.isfinite(centered_means)
+    valid = np.isfinite(offsets)
 
     if not np.any(valid):
         raise ValueError(
@@ -173,66 +219,30 @@ def theta_for_tilted_mean(
         )
 
     valid_thetas = theta_grid[valid]
-    valid_values = centered_means[valid]
+    valid_offsets = offsets[valid]
 
-    exact_match_index = np.where(np.abs(valid_values) <= tolerance)[0]
+    on_target = np.where(np.abs(valid_offsets) <= tolerance)[0]
 
-    if exact_match_index.size > 0:
-        return float(valid_thetas[exact_match_index[0]])
+    if on_target.size > 0:
+        return float(valid_thetas[on_target[0]])
 
-    bracket: tuple[float, float] | None = None
-
-    for i in range(len(valid_thetas) - 1):
-        left_value = valid_values[i]
-        right_value = valid_values[i + 1]
-
-        if left_value == 0.0:
-            return float(valid_thetas[i])
-
-        if right_value == 0.0:
-            return float(valid_thetas[i + 1])
-
-        if left_value * right_value < 0.0:
-            bracket = (float(valid_thetas[i]), float(valid_thetas[i + 1]))
-            break
+    bracket = _find_sign_change_bracket(valid_thetas, valid_offsets)
 
     if bracket is None:
-        min_mean = float(np.nanmin(valid_values + target_mean))
-        max_mean = float(np.nanmax(valid_values + target_mean))
+        reachable_means = valid_offsets + target_mean
 
         raise ValueError(
             f"Could not bracket a solution for Gamma'(theta) = {target_mean}. "
             f"On theta_range={theta_range}, valid tilted means range from "
-            f"{min_mean:.6g} to {max_mean:.6g}. "
+            f"{float(np.min(reachable_means)):.6g} to "
+            f"{float(np.max(reachable_means)):.6g}. "
             "Try a wider theta_range or check that the target mean is reachable."
         )
 
-    left, right = bracket
-
-    def centered_mean(theta: float) -> float:
+    def tilted_mean_offset(theta: float) -> float:
         if not dist.domain_contains(theta):
             raise ValueError(f"theta={theta} is outside the CGF domain.")
 
         return float(dist.mean_under_tilt(theta) - target_mean)
 
-    left_value = centered_mean(left)
-    right_value = centered_mean(right)
-
-    for _ in range(max_iterations):
-        mid = 0.5 * (left + right)
-        mid_value = centered_mean(mid)
-
-        if abs(mid_value) <= tolerance:
-            return float(mid)
-
-        if left_value * mid_value <= 0.0:
-            right = mid
-            right_value = mid_value
-        else:
-            left = mid
-            left_value = mid_value
-
-        if abs(right - left) <= tolerance:
-            return float(0.5 * (left + right))
-
-    return float(0.5 * (left + right))
+    return _bisect_root(tilted_mean_offset, bracket, tolerance, max_iterations)

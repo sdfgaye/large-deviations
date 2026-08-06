@@ -15,8 +15,8 @@ not by naive Monte Carlo.
 
 from __future__ import annotations
 
+from collections.abc import Iterable
 from dataclasses import dataclass
-from typing import Iterable
 
 import numpy as np
 

@@ -33,9 +33,7 @@ The systematic factor is $Z$. The idiosyncratic noise is $\varepsilon_k$.
 
 ## 2. Why the threshold is $x_p=\Phi^{-1}(1-p)$
 
-Each $X_k$ is standard normal.
-
-So
+Each $X_k$ is standard normal, so
 
 $$
 \mathbb P(Y_k=1) =
@@ -149,9 +147,7 @@ $$
 \frac{L_n}{n}\Rightarrow p(Z).
 $$
 
-The limiting loss rate is random.
-
-This is the mathematical reason dependence creates clustered losses.
+The limiting loss rate is random — this is the mathematical reason dependence creates clustered losses.
 
 ## 7. Large-loss threshold regime
 
@@ -198,6 +194,8 @@ $$
 
 The decay is polynomial in $n$, not exponential in $n$.
 
+A numerical caveat: the theorem controls only the leading coefficient of $\log n$, so the ratio $-\log \mathbb P(L_n\ge n q_n)/\log n$ approaches the limit with corrections of order $1/\log n$. Convergence is therefore logarithmically slow — for $p=2\%$, $\rho=0.5$, $a=0.5$ the fitted log-log slope is still about $2.4$ at $n=10^8$ against a limit of $1.5$. Numerical checks at realistic $n$ should test the direction of convergence, not exact agreement.
+
 ## 9. Interpretation of the exponent
 
 The exponent is
@@ -207,11 +205,7 @@ $$
 a\frac{1-\rho^2}{\rho^2}.
 $$
 
-If $\rho$ is small, then $\gamma$ is large, so extreme losses are very rare.
-
-If $\rho$ is close to one, then $\gamma$ is small, so extreme losses are much less rare.
-
-The systematic factor dominates the portfolio.
+If $\rho$ is small, then $\gamma$ is large and extreme losses are very rare. If $\rho$ is close to one, then $\gamma$ is small and extreme losses are much less rare: the systematic factor dominates the portfolio.
 
 ## 10. Connection to importance sampling
 
@@ -219,10 +213,8 @@ The final project target is a two-step importance sampling estimator.
 
 The two steps are:
 
-```text
-1. shift the distribution of the systematic factor Z
-2. conditionally on Z, tilt the Bernoulli defaults
-```
+1. shift the distribution of the systematic factor $Z$,
+2. conditionally on $Z$, tilt the Bernoulli defaults.
 
 This mirrors the model structure:
 
@@ -233,6 +225,4 @@ $$
 \right].
 $$
 
-Notebook 04 builds the model.
-
-Notebook 05 should attack the rare-event estimator.
+Notebook 04 builds the model; notebook 05 will attack the rare-event estimator.
